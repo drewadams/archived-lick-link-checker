@@ -1,6 +1,6 @@
 {
 	"name": "lick-links",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "CLI link checker that outputs results to JSON file.",
 	"main": "bin/index.js",
 	"types": "index.d.ts",
