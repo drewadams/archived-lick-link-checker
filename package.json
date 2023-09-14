@@ -2,6 +2,10 @@
 	"name": "lick-links",
 	"version": "1.0.3",
 	"description": "CLI link checker that outputs results to JSON file.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Drewadams/lick-link-checker"
+	},
 	"main": "bin/index.js",
 	"types": "index.d.ts",
 	"bin": {

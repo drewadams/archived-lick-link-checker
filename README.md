@@ -1,18 +1,18 @@
 # Lick Links - Link Checker
 
-### About
+## About
 
 This is a CLI link checker written in Typescript.
 
-### Installation
+## Installation
 
 ```bash
 npm i -g lick-links
 ```
 
-### Usage
+## Usage
 
-#### npx
+### npx
 
 No install needed
 
@@ -20,13 +20,13 @@ No install needed
 npx lick-links <siteUrl> [options]
 ```
 
-#### If installed
+### If installed
 
 ```bash
 lick <siteUrl> [options]
 ```
 
-### Help
+## Help
 
 ```bash
 lick --help
