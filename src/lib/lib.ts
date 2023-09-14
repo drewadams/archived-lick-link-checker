@@ -29,7 +29,7 @@ export default async function checkLinks(
 	 * Goes into links array and checks each one.
 	 * Will do this for the amount of times specified in depth.
 	 */
-	let results = new Set<ResultData>();
+	let results = new Array<ResultData>();
 	for (let i = 0; i <= depth; i++) {
 		console.log(chalk.blue(`Current depth: ${i}`));
 
@@ -43,26 +43,23 @@ export default async function checkLinks(
 			);
 
 			for (const link of fetchResults) {
-				if (link) {
-					linksOnPages.push(link);
-					results.add({ url: link.url, status: link.status, date });
+				if (
+					link &&
+					link.pageLinks &&
+					!results.some(({ url }) => link.pageLinks?.includes(url))
+				) {
+					linksOnPages.push(filterArray(link.pageLinks.flat()));
+
+					results.push({ url: link.url, status: link.status, date });
 				}
 			}
 		}
 
 		// Only get unique links
-		links = [
-			...new Set(
-				linksOnPages
-					.map((link) => {
-						return link.pageLinks as string[];
-					})
-					.flat()
-			),
-		];
-		console.log(chalk.green(`Found links: ${links.length}`));
+		links = filterArray(linksOnPages.flat());
 	}
 	if (verbose) console.table([...results]);
+	console.log(chalk.green(`Found links: ${results.length}`));
 	await writeFile(path, JSON.stringify([...results], undefined, 2))
 		.then(() => console.log(chalk.green(`Report written to ${path}`)))
 		.catch((err: Error) => {
@@ -77,10 +74,18 @@ type FetchResults = {
 	body: string | Promise<string>;
 };
 
+// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+function filterArray(array: any[]) {
+	var seen: { [key: string]: any } = {};
+	return array.filter(function (item) {
+		return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+	});
+}
+
 async function fetchUrls(baseUrl: string, urls: string[]) {
 	let fetchResults = [];
 	for (const url of urls) {
-		const result = fetch(url, { redirect: "error" })
+		const result = fetch(url)
 			.then(async (res) => {
 				return {
 					url,
