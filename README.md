@@ -1,5 +1,7 @@
 # Lick Links - Link Checker
 
+[![npm version](https://badge.fury.io/js/lick-links.svg)](https://badge.fury.io/js/lick-links)
+
 ## About
 
 This is a CLI link checker written in Typescript.
