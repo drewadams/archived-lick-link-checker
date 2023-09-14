@@ -41,7 +41,8 @@ try {
 					});
 			},
 			async function (argv) {
-				await checkLinks(argv.siteUrl, argv.depth, argv.path, argv.verbose);
+				const { siteUrl, depth, path, verbose } = argv;
+				await checkLinks(siteUrl, depth, path, verbose);
 			}
 		)
 		.help().argv;
