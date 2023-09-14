@@ -16,6 +16,9 @@ export default async function checkLinks(
 	if (!siteUrl.includes("https")) {
 		siteUrl = "https://" + siteUrl;
 	}
+	if (siteUrl.charAt(siteUrl.length - 1) === "/") {
+		siteUrl = siteUrl.slice(0, -1);
+	}
 	if (!path.includes(".json")) {
 		path = path + ".json";
 	}
