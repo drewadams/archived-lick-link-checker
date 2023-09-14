@@ -75,14 +75,14 @@ type FetchResults = {
 };
 
 // https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-function filterArray(array: any[]) {
+export function filterArray(array: any[]) {
 	var seen: { [key: string]: any } = {};
 	return array.filter(function (item) {
 		return seen.hasOwnProperty(item) ? false : (seen[item] = true);
 	});
 }
 
-async function fetchUrls(baseUrl: string, urls: string[]) {
+export async function fetchUrls(baseUrl: string, urls: string[]) {
 	let fetchResults = [];
 	for (const url of urls) {
 		const result = fetch(url)
@@ -104,7 +104,7 @@ async function fetchUrls(baseUrl: string, urls: string[]) {
 	return fetchResults;
 }
 
-async function fetchUrl(url: string): Promise<FetchResults> {
+export async function fetchUrl(url: string): Promise<FetchResults> {
 	console.log(chalk.green(`fetching: ${url}`));
 	const res = await fetch(url);
 	return {
@@ -113,7 +113,10 @@ async function fetchUrl(url: string): Promise<FetchResults> {
 	};
 }
 
-function filterResults(baseUrl: string, body: string): string[] | undefined {
+export function filterResults(
+	baseUrl: string,
+	body: string
+): string[] | undefined {
 	let matcherUrl = baseUrl.replace(/\//g, "/");
 	matcherUrl = baseUrl.replace(/\./g, "\\.");
 

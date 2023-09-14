@@ -31,7 +31,7 @@ try {
 						alias: "p",
 						type: "string",
 						description: "Path to the output file.",
-						default: "./report.json",
+						default: "./lick-report.json",
 					})
 					.option("verbose", {
 						alias: "v",
