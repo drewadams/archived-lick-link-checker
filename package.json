@@ -1,11 +1,10 @@
 {
-	"name": "lick",
+	"name": "lick-links",
 	"version": "1.0.0",
-	"description": "CLI link checker that outputs results to JSON.",
+	"description": "CLI link checker that outputs results to JSON file.",
 	"main": "bin/index.js",
 	"module": "bin/index.mjs",
 	"types": "index.d.ts",
-	"type": "module",
 	"bin": {
 		"lick": "bin/index.js"
 	},
@@ -23,9 +22,10 @@
 	],
 	"typings": "./src/index.d.ts",
 	"devDependencies": {
-		"typescript": "^5.2.2",
-		"yargs": "^17.7.2",
 		"@types/yargs": "^17.0.24",
-		"tsup": "^7.2.0"
+		"chalk": "^5.3.0",
+		"tsup": "^7.2.0",
+		"typescript": "^5.2.2",
+		"yargs": "^17.7.2"
 	}
 }

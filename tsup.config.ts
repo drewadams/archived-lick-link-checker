@@ -5,6 +5,6 @@ export default defineConfig({
 	sourcemap: true,
 	clean: true,
 	outDir: "bin",
-	format: ["cjs", "esm"],
+	format: ["cjs"],
 	dts: true,
 });
