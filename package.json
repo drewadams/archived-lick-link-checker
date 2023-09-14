@@ -1,0 +1,36 @@
+{
+	"name": "lick-links",
+	"version": "1.0.0",
+	"description": "CLI link checker that outputs results to JSON.",
+	"main": "dist/bin/index.js",
+	"module": "dist/bin/index.mjs",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"bin": {
+		"lick": "dist/bin/index.js"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsup --config tsupconfig.ts --format cjs,esm --dts",
+		"lint": "tsc",
+		"prepublish": "npm run build"
+	},
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"chalk": "^5.3.0",
+		"tsc": "^2.0.4",
+		"typescript": "^5.2.2",
+		"yargs": "^17.7.2"
+	},
+	"files": [
+		"./bin/*",
+		"./lib/*"
+	],
+	"typings": "./src/index.d.ts",
+	"devDependencies": {
+		"@types/yargs": "^17.0.24",
+		"ts-node": "^10.9.1",
+		"tsup": "^7.2.0"
+	}
+}

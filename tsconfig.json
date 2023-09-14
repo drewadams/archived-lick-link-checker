@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"target": "es2022",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"rootDir": "src",
+		"strict": true,
+		"alwaysStrict": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"downlevelIteration": true,
+		"declaration": true,
+		"noUncheckedIndexedAccess": true,
+		"noEmit": true,
+		"pretty": true
+	},
+	"include": ["typings/**/*", "src/**/*"]
+}
