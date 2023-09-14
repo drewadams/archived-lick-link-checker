@@ -5,6 +5,7 @@ import yargs from "yargs";
 
 /**
  * TODO: Add CSV export functionality
+ * TODO: Check external links
  */
 
 try {

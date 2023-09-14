@@ -1,4 +1,3 @@
-import { PathLike } from "fs";
 import chalk from "chalk";
 import { writeFile } from "fs/promises";
 
@@ -11,11 +10,14 @@ interface ResultData {
 export default async function checkLinks(
 	siteUrl: string,
 	depth = 0,
-	path: PathLike,
+	path: string,
 	verbose: boolean
 ) {
 	if (!siteUrl.includes("https")) {
 		siteUrl = "https://" + siteUrl;
+	}
+	if (!path.includes(".json")) {
+		path = path + ".json";
 	}
 	const date = new Date().toLocaleDateString("en-US");
 	const firstPage = await fetchUrl(siteUrl);
