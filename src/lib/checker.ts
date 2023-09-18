@@ -108,8 +108,8 @@ export default class LinkChecker {
 					}
 					if (result.value?.url) {
 						this.results.push({
-							url: result.value?.url!,
-							status: result.value?.status!,
+							url: result.value?.url,
+							status: result.value?.status,
 							date,
 						});
 					}
