@@ -14,7 +14,7 @@ yargs(process.argv.slice(2))
 	.usage("$0 <siteUrl> [options]")
 	.command(
 		"$0 <siteUrl> [options?]",
-		"Fetch contents of url, and check all links inside of it.",
+		"Fetch contents of url, and check all internal links inside of it.",
 		(yargs) => {
 			return yargs
 				.positional("siteUrl", {
