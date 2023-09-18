@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
-import checkLinks from "./lib/lib.js";
+import LinkChecker, { type CheckerOptions } from "./lib/checker.js";
+
 import yargs from "yargs";
 
 /**
@@ -38,12 +39,15 @@ yargs(process.argv.slice(2))
 					alias: "v",
 					type: "boolean",
 					description: "Adds a result table to console log.",
-					default: true,
+					default: false,
 				});
 		},
 		async function (argv) {
-			const { siteUrl, depth, path, verbose } = argv;
-			await checkLinks(siteUrl, depth, path, verbose);
+			const { $0, _, siteUrl, ...options } = argv;
+
+			const checker = new LinkChecker(siteUrl, options as CheckerOptions);
+			await checker.runCheck();
+			await checker.writeResultsToFile();
 		}
 	)
 	.help().argv;
