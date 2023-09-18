@@ -134,14 +134,6 @@ export default class LinkChecker {
 			});
 	}
 
-	// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-	filterArray(array: any[]) {
-		var seen: { [key: string]: any } = {};
-		return array.filter(function (item) {
-			return seen.hasOwnProperty(item) ? false : (seen[item] = true);
-		});
-	}
-
 	async fetchUrls(urls: string[]) {
 		let fetchResults = [];
 		for (const url of urls) {
@@ -174,19 +166,11 @@ export default class LinkChecker {
 	async fetchUrl(url: string): Promise<FetchResults> {
 		console.log(chalk.green(`fetching: ${url}`));
 		const res = await fetch(url);
+		this.fetchedUrls.add(url);
 		return {
 			status: res.status,
 			body: await res.text(),
 		};
-	}
-
-	filter(data: ResultData[]) {
-		return data.filter((item, index) => {
-			index ===
-				data.findIndex((dataItem) => {
-					dataItem.url === item.url;
-				});
-		});
 	}
 
 	filterResults(body: string): string[] | undefined {
