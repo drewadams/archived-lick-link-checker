@@ -99,7 +99,6 @@ export default class LinkChecker {
 					);
 				})
 				.filter(Boolean);
-			console.log(newResults);
 
 			for (const result of newResults) {
 				if (result && result.status === "fulfilled") {
