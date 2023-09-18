@@ -47,6 +47,7 @@ yargs(process.argv.slice(2))
 
 			const checker = new LinkChecker(siteUrl, options as CheckerOptions);
 			await checker.runCheck();
+			console.log("Check completed.");
 			await checker.writeResultsToFile();
 		}
 	)
