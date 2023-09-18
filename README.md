@@ -28,6 +28,16 @@ npx lick-links <siteUrl> [options]
 lick <siteUrl> [options]
 ```
 
+### Options
+
+| Flag           | Description                        | Value                                    |
+| -------------- | ---------------------------------- | ---------------------------------------- |
+| --version      | Show version number                | [boolean]                                |
+| --help         | Show help                          | [boolean]                                |
+| --d, --depth   | Depth the checker goes to          | [number] [default: 0]                    |
+| --p, --path    | Path to the output file            | [string] [default: "./lick-report.json"] |
+| --v, --verbose | Adds additional logging to console | [boolean] [default: false]               |
+
 ## Help
 
 ```bash
