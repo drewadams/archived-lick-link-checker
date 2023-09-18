@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { writeFile } from "fs/promises";
 
-interface ResultData {
+export interface ResultData {
 	url: string;
 	status: number;
 	date: string;
@@ -43,17 +43,22 @@ export default async function checkLinks(
 			let fetchResults = await Promise.all(
 				await fetchUrls(
 					siteUrl,
-					links.map((link) => siteUrl + link)
+					links.map((link) => {
+						if (link.includes(siteUrl)) {
+							return link;
+						}
+						return siteUrl + link;
+					}),
+					verbose
 				)
 			);
 
 			for (const link of fetchResults) {
 				if (
-					link &&
-					link.pageLinks &&
+					link?.pageLinks &&
 					!results.some(({ url }) => link.pageLinks?.includes(url))
 				) {
-					linksOnPages.push(filterArray(link.pageLinks.flat()));
+					linksOnPages.push(link.pageLinks.flat());
 
 					results.push({ url: link.url, status: link.status, date });
 				}
@@ -61,11 +66,14 @@ export default async function checkLinks(
 		}
 
 		// Only get unique links
-		links = filterArray(linksOnPages.flat());
+		links = [...new Set(linksOnPages.flat())];
 	}
-	if (verbose) console.table([...results]);
-	console.log(chalk.green(`Found links: ${results.length}`));
-	await writeFile(path, JSON.stringify([...results], undefined, 2))
+
+	const finalResults = [...new Set(results)];
+
+	if (verbose) console.table(finalResults);
+	console.log(chalk.green(`Found links: ${finalResults.length}`));
+	await writeFile(path, JSON.stringify(finalResults, undefined, 2))
 		.then(() => console.log(chalk.green(`Report written to ${path}`)))
 		.catch((err: Error) => {
 			console.error(
@@ -87,7 +95,11 @@ export function filterArray(array: any[]) {
 	});
 }
 
-export async function fetchUrls(baseUrl: string, urls: string[]) {
+export async function fetchUrls(
+	baseUrl: string,
+	urls: string[],
+	verbose = false
+) {
 	let fetchResults = [];
 	for (const url of urls) {
 		const result = fetch(url)
@@ -97,7 +109,7 @@ export async function fetchUrls(baseUrl: string, urls: string[]) {
 					status: res.status,
 					pageLinks: await res
 						.text()
-						.then((res) => filterResults(baseUrl, res)),
+						.then((res) => filterResults(baseUrl, res, verbose)),
 				};
 			})
 			.catch((err: Error) => {
@@ -120,7 +132,8 @@ export async function fetchUrl(url: string): Promise<FetchResults> {
 
 export function filterResults(
 	baseUrl: string,
-	body: string
+	body: string,
+	verbose?: boolean
 ): string[] | undefined {
 	let matcherUrl = baseUrl.replace(/\//g, "/");
 	matcherUrl = baseUrl.replace(/\./g, "\\.");
@@ -132,6 +145,9 @@ export function filterResults(
 	let matches = body.match(regex)?.filter(Boolean);
 	if (!matches) {
 		return;
+	}
+	if (verbose) {
+		console.log(chalk.blue("Found links: " + matches.length));
 	}
 	return matches;
 }
