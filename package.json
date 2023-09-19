@@ -25,13 +25,14 @@
 	],
 	"typings": "./src/index.d.ts",
 	"devDependencies": {
-		"@types/yargs": "^17.0.24",
 		"@types/node": "^20.6.2",
+		"@types/yargs": "^17.0.24",
+		"chalk": "^5.3.0",
 		"tsup": "^7.2.0",
-		"typescript": "^5.2.2",
-		"chalk": "^5.3.0"
+		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"@json2csv/node": "^7.0.3",
 		"yargs": "^17.7.2"
 	}
 }

@@ -32,12 +32,17 @@ yargs(process.argv.slice(2))
 					alias: "p",
 					type: "string",
 					description: "Path to the output file.",
-					default: "./lick-report.json",
+					default: "./lick-report",
 				})
 				.option("slow", {
 					alias: "s",
 					type: "boolean",
 					description: "Increases fetch timeout.",
+					default: false,
+				})
+				.option("csv", {
+					type: "boolean",
+					description: "Exports report to a CSV file instead of JSON.",
 					default: false,
 				})
 				.option("verbose", {

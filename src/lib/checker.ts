@@ -1,3 +1,4 @@
+import { AsyncParser } from "@json2csv/node";
 import chalk from "chalk";
 import { writeFile } from "fs/promises";
 
@@ -7,6 +8,7 @@ export interface CheckerOptions {
 	path: string;
 	verbose: boolean;
 	slow: boolean;
+	csv: boolean;
 }
 
 export interface ResultData {
@@ -37,15 +39,20 @@ export default class LinkChecker {
 	results: ResultData[];
 	fails: string[];
 	timeout: number;
+	csv: boolean;
 
 	// Defaults are set in index.ts inside yargs.
-	constructor(siteUrl: string, { depth, path, verbose, slow }: CheckerOptions) {
+	constructor(
+		siteUrl: string,
+		{ depth, path, verbose, slow, csv }: CheckerOptions
+	) {
 		this.siteUrl = siteUrl;
 		this.path = path;
 		this.depth = depth;
 		this.verbose = verbose;
-		this.fetchedUrls = new Set<string>();
 		this.timeout = slow ? 15000 : 6000;
+		this.csv = csv;
+		this.fetchedUrls = new Set<string>();
 		this.results = [];
 		this.fails = [];
 	}
@@ -58,8 +65,10 @@ export default class LinkChecker {
 		if (this.siteUrl.charAt(this.siteUrl.length - 1) === "/") {
 			this.siteUrl = this.siteUrl.slice(0, -1);
 		}
-		if (!this.path.includes(".json")) {
+		if (!this.csv && !this.path.endsWith(".json")) {
 			this.path = this.path + ".json";
+		} else if (this.csv && !this.path.endsWith(".csv")) {
+			this.path = this.path + ".csv";
 		}
 
 		const date = new Date().toLocaleDateString("en-US");
@@ -135,11 +144,22 @@ export default class LinkChecker {
 	}
 
 	async writeResultsToFile() {
-		await writeFile(this.path, JSON.stringify(this.results, undefined, 2))
+		let data;
+
+		if (this.csv) {
+			const parser = new AsyncParser({
+				fields: [...Object.keys(this.results[0]!)],
+			});
+			data = await parser.parse([...this.results]).promise();
+		} else {
+			data = JSON.stringify(this.results, undefined, 2);
+		}
+
+		await writeFile(this.path, data)
 			.then(() => console.log(chalk.green(`Report written to ${this.path}`)))
 			.catch((err: Error) => {
 				console.error(
-					chalk.red(`Error writting to file. Message: ${err.message}`)
+					chalk.red(`Error writing to file. Message: ${err.message}`)
 				);
 			});
 	}
