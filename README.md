@@ -36,6 +36,7 @@ lick <siteUrl> [options]
 | --help         | Show help                          | [boolean]                                |
 | --d, --depth   | Depth the checker goes to          | [number] [default: 0]                    |
 | --p, --path    | Path to the output file            | [string] [default: "./lick-report.json"] |
+| --s, --slow    | Increases fetch timeout            | [boolean] [default: false]               |
 | --v, --verbose | Adds additional logging to console | [boolean] [default: false]               |
 
 ## Help

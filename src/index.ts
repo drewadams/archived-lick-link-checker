@@ -34,6 +34,12 @@ yargs(process.argv.slice(2))
 					description: "Path to the output file.",
 					default: "./lick-report.json",
 				})
+				.option("slow", {
+					alias: "s",
+					type: "boolean",
+					description: "Increases fetch timeout.",
+					default: false,
+				})
 				.option("verbose", {
 					alias: "v",
 					type: "boolean",

@@ -6,6 +6,7 @@ export interface CheckerOptions {
 	depth: number;
 	path: string;
 	verbose: boolean;
+	slow: boolean;
 }
 
 export interface ResultData {
@@ -35,14 +36,16 @@ export default class LinkChecker {
 	fetchedUrls: Set<string>;
 	results: ResultData[];
 	fails: string[];
+	timeout: number;
 
 	// Defaults are set in index.ts inside yargs.
-	constructor(siteUrl: string, { depth, path, verbose }: CheckerOptions) {
+	constructor(siteUrl: string, { depth, path, verbose, slow }: CheckerOptions) {
 		this.siteUrl = siteUrl;
 		this.path = path;
 		this.depth = depth;
 		this.verbose = verbose;
 		this.fetchedUrls = new Set<string>();
+		this.timeout = slow ? 15000 : 6000;
 		this.results = [];
 		this.fails = [];
 	}
@@ -91,12 +94,19 @@ export default class LinkChecker {
 			let uniqueLinks = [];
 			const newResults = fetchResults
 				.filter((link) => {
-					return (
+					return link.status === "fulfilled";
+				})
+				.map((link) => {
+					if (
 						link.status === "fulfilled" &&
-						!this.results.some(({ url }) =>
-							link.value?.pageLinks?.includes(url)
-						)
-					);
+						Array.isArray(link.value?.pageLinks)
+					) {
+						link.value.pageLinks = link.value.pageLinks.filter(
+							(url) =>
+								!this.results.some(({ url: resultUrl }) => url === resultUrl)
+						);
+					}
+					return link;
 				})
 				.filter(Boolean);
 
@@ -136,14 +146,16 @@ export default class LinkChecker {
 
 	async fetchUrls(urls: string[]) {
 		let fetchResults = [];
-		for (const url of urls) {
+		for (let url of urls) {
+			url = url.trim();
 			if (!this.fetchedUrls.has(url)) {
 				this.fetchedUrls.add(url);
 				if (this.verbose) {
 					console.log("fetching: ", url);
 				}
-				const result = fetch(url, { redirect: "follow" })
-					.then(async (res) => {
+
+				const result = this.fetchTimeout(url, this.timeout).then(
+					async (res) => {
 						return {
 							url,
 							status: res.status,
@@ -151,21 +163,33 @@ export default class LinkChecker {
 								.text()
 								.then((res) => this.filterResults(res)),
 						};
-					})
-					.catch((err: Error) => {
-						console.error(chalk.red("Failed to fetch: " + url));
-						console.error(chalk.bgRed(`${err.name}, ${err.message}`));
-						if (this.verbose) console.error(err);
-					});
+					}
+				);
 				fetchResults.push(result);
 			}
 		}
 		return fetchResults;
 	}
 
+	async fetchTimeout(url: string, time: number, fetchOptions?: RequestInit) {
+		const res = await fetch(url, {
+			signal: AbortSignal.timeout(time),
+			...fetchOptions,
+		}).catch((err) => {
+			if (err instanceof Error && err.name === "TimeoutError") {
+				throw new Error("Fetch timeout. Failed on: " + url);
+			} else {
+				throw new Error(err);
+			}
+		});
+
+		return res ?? null;
+	}
+
 	async fetchUrl(url: string): Promise<FetchResults> {
+		url = url.trim();
 		console.log(chalk.green(`fetching: ${url}`));
-		const res = await fetch(url);
+		const res = await this.fetchTimeout(url, this.timeout);
 		this.fetchedUrls.add(url);
 		return {
 			status: res.status,
@@ -186,7 +210,9 @@ export default class LinkChecker {
 			return;
 		}
 
-		const results = matches.filter((url) => !this.fetchedUrls.has(url));
+		const results = matches
+			.filter((url) => !this.fetchedUrls.has(url))
+			.map((url) => url.trim());
 		return results;
 	}
 }
