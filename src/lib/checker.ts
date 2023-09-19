@@ -68,7 +68,7 @@ export default class LinkChecker {
 		if (firstPage.status !== 200) {
 			throw new Error("Base URL is a redirect or does not exist.");
 		}
-		let links = this.filterResults(firstPage.body as string);
+		let links = this.filterResults((await firstPage.body) as string);
 
 		/**
 		 * Goes into links array and checks each one.
@@ -198,11 +198,12 @@ export default class LinkChecker {
 	}
 
 	filterResults(body: string): string[] | undefined {
-		let matcherUrl = this.siteUrl.replace(/\//g, "/");
-		matcherUrl = this.siteUrl.replace(/\./g, "\\.");
+		let matcherUrl = this.siteUrl.replace(/\./g, "\\.");
+		matcherUrl = matcherUrl.replace("https://", "");
+		console.log("Matcher url: ", matcherUrl);
 
 		const regex = new RegExp(
-			`(?:(?<=<a.*))(?:(?<=href="${matcherUrl}))([^"]*)(?:(?="))|(?:(?<=<a.*))(?:(?<=href="))(\/[^"]*)(?:(?="))`,
+			`(?:(?<=<a.*))(?:(?<=href="https:\/\/[^*]${matcherUrl}))([^"]*)(?:(?="))|(?:(?<=<a.*))(?:(?<=href="))(\/[^"]*)(?:(?="))`,
 			"gmi"
 		);
 		let matches = body.match(regex)?.filter(Boolean);
