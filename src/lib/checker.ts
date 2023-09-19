@@ -200,7 +200,6 @@ export default class LinkChecker {
 	filterResults(body: string): string[] | undefined {
 		let matcherUrl = this.siteUrl.replace(/\./g, "\\.");
 		matcherUrl = matcherUrl.replace("https://", "");
-		console.log("Matcher url: ", matcherUrl);
 
 		const regex = new RegExp(
 			`(?:(?<=<a.*))(?:(?<=href="https:\/\/[^*]${matcherUrl}))([^"]*)(?:(?="))|(?:(?<=<a.*))(?:(?<=href="))(\/[^"]*)(?:(?="))`,
