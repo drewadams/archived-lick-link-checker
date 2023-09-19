@@ -1,6 +1,6 @@
 {
 	"name": "lick-links",
-	"version": "1.2.4",
+	"version": "1.3.0",
 	"description": "CLI link checker that outputs results to JSON file.",
 	"repository": {
 		"type": "git",
