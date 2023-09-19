@@ -203,7 +203,7 @@ export default class LinkChecker {
 			}
 		});
 
-		return res ?? null;
+		return res;
 	}
 
 	async fetchUrl(url: string): Promise<FetchResults> {
