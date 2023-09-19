@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-	entry: ["src/index.ts", "src/lib/functions.ts"],
+	entry: ["src/"],
 	sourcemap: true,
 	clean: true,
 	outDir: "bin",
